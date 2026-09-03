@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMI Form + Native Scanner + 9 Photos</title>
+    
+    <style>
+        :root {
+            --primary: #2563eb;
+            --success: #16a34a;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --border: #cbd5e1;
+            --sequential: #8b5cf6;
+            --warning: #dc2626;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 12px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 16px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 14px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            margin-bottom: 16px;
+        }
+        
+        h3.section-title {
+            font-size: 16px;
+            color: var(--primary);
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 6px;
+            margin-top: 16px;
+            margin-bottom: 12px;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 3px;
+            color: #475569;
+        }
+
+        input[type="text"], input[type="email"], input[type="tel"], input[type="number"] {
+            width: 100%;
+            padding: 8px 10px;
+            box-sizing: border-box;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        input[type="file"] {
+            width: 100%;
+            padding: 6px;
+            background: #f1f5f9;
+            border-radius: 6px;
+            border: 1px dashed var(--primary);
+            font-size: 13px;
+        }
+
+        button.submit-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 16px;
+        }
+
+        .queue-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .customer-card {
+            background: var(--card-bg);
+            border-left: 5px solid var(--primary);
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgb(0 0 0 / 0.05);
+            margin-bottom: 16px;
+        }
+
+        .customer-title {
+            font-weight: bold;
+            font-size: 15px;
+            margin-bottom: 12px;
+            color: #0f172a;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 8px;
+        }
+
+        .copy-sequence-btn {
+            background-color: var(--sequential);
+            color: white;
+            width: 100%;
+            padding: 14px 10px;
+            font-size: 15px;
+            border-radius: 8px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 4px rgba(139, 92, 246, 0.3);
+        }
+        
+        .copy-sequence-btn.copied {
+            background-color: var(--success);
+        }
+
+        .action-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px 8px;
+        }
+
+        .copy-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .copy-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #64748b;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        .copy-btn {
+            background-color: #f1f5f9;
+            color: #0f172a;
+            padding: 9px 10px;
+            font-size: 14px;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: left;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .copy-btn.copied {
+            background-color: var(--success);
+            color: white;
+            border-color: var(--success);
+        }
+
+        /* Image Display Grid Styles */
+        .photo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 16px;
+            border-top: 2px solid #f1f5f9;
+            padding-top: 12px;
+        }
+        
+        .photo-box {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            background: #f8fafc;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .photo-box img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid #cbd5e1;
+        }
+        
+        .photo-actions {
+            display: flex;
+            gap: 4px;
+        }
+        
+        .img-btn {
+            flex: 1;
+            padding: 6px 0;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .save-img-btn { background: var(--primary); color: white; }
+        .copy-img-btn { background: #cbd5e1; color: #1e293b; }
+
+        .delete-btn {
+            background-color: #fee2e2;
+            color: #991b1b;
+            width: 100%;
+            padding: 12px;
+            font-size: 14px;
+            border-radius: 8px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 16px;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #64748b;
+            padding: 20px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>📋 Quick EMI Queue</h2>
+
+    <div class="card">
+        <form id="emiForm">
+            
+            <h3 class="section-title">Text Details</h3>
+            <div class="form-group"><label>Tole</label><input type="text" id="tole"></div>
+            <div class="form-group"><label>Ward No.</label><input type="text" id="wardNo"></div>
+            <div class="form-group"><label>Rural/Municipality</label><input type="text" id="municipality"></div>
+            <div class="form-group"><label>District</label><input type="text" id="district"></div>
+            <div class="form-group"><label>Province</label><input type="text" id="province"></div>
+            <div class="form-group"><label>Email</label><input type="email" id="email"></div>
+            <div class="form-group"><label>Mobile No. 1</label><input type="tel" id="mobile1"></div>
+            <div class="form-group"><label>Marital Status</label><input type="text" id="maritalStatus"></div>
+            <div class="form-group"><label>Grand Father Name</label><input type="text" id="grandFatherName"></div>
+            <div class="form-group"><label>Mother Name</label><input type="text" id="motherName"></div>
+            <div class="form-group"><label>Father Name</label><input type="text" id="fatherName"></div>
+            <div class="form-group"><label>Occupation</label><input type="text" id="occupation"></div>
+            
+            <div class="form-group">
+                <label>Citizenship Issued Date</label>
+                <input type="text" id="citIssuedDate" placeholder="YYYY/MM/DD" maxlength="10">
+            </div>
+            <div class="form-group"><label>Citizenship Issued From</label><input type="text" id="citIssuedFrom"></div>
+            <div class="form-group"><label>Citizenship No.</label><input type="text" id="citNo"></div>
+            <div class="form-group">
+                <label>Date of Birth</label>
+                <input type="text" id="dob" placeholder="YYYY/MM/DD" maxlength="10">
+            </div>
+            
+            <div class="form-group"><label>Last Name</label><input type="text" id="lastName"></div>
+            <div class="form-group"><label>Middle Name</label><input type="text" id="middleName"></div>
+            <div class="form-group"><label>First Name</label><input type="text" id="firstName"></div>
+
+            <div class="form-group">
+                <label>IMEI Number</label>
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" id="imei" placeholder="Type or scan IMEI">
+                    <input type="file" id="scannerInput" accept="image/*" capture="environment" style="display: none;">
+                    <button type="button" id="scanBtn" style="padding: 0 16px; background: #0f766e; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; white-space: nowrap;">📷 Scan Box</button>
+                </div>
+                <div id="scan-feedback" style="color: #ea580c; font-size: 13px; margin-top: 8px; font-weight: bold; min-height: 18px;"></div>
+            </div>
+
+            <h3 class="section-title">Customer ID & Photos</h3>
+            <p style="font-size: 11px; color: #64748b; margin-top: 0;">Processed in Ultra HD (max 2500px, 95% quality).</p>
+            
+            <div class="form-group"><label>Citizenship Card (Front)</label><input type="file" id="citFrontImg" accept="image/*" capture="environment"></div>
+            <div class="form-group"><label>Citizenship Card (Back)</label><input type="file" id="citBackImg" accept="image/*" capture="environment"></div>
+            <div class="form-group"><label>Customer Photo 1</label><input type="file" id="photo1Img" accept="image/*" capture="user"></div>
+            <div class="form-group"><label>Customer Photo 2</label><input type="file" id="photo2Img" accept="image/*" capture="user"></div>
+
+            <h3 class="section-title">Deeds & Documents</h3>
+            <p style="font-size: 11px; color: #64748b; margin-top: 0;">Processed in Document HD (< 1.2MB limit).</p>
+
+            <div class="form-group"><label>Borrower-Deed 1</label><input type="file" id="deed1Img" accept="image/*" capture="environment"></div>
+            <div class="form-group"><label>Borrower-Deed 2</label><input type="file" id="deed2Img" accept="image/*" capture="environment"></div>
+            <div class="form-group"><label>PG-Deed</label><input type="file" id="pgDeedImg" accept="image/*" capture="environment"></div>
+            <div class="form-group"><label>Loan Application</label><input type="file" id="loanAppImg" accept="image/*" capture="environment"></div>
+            <div class="form-group"><label>VAT Bill</label><input type="file" id="vatBillImg" accept="image/*" capture="environment"></div>
+
+            <button type="submit" class="submit-btn">Add Customer to Queue</button>
+        </form>
+    </div>
+
+    <div>
+        <div class="queue-header">
+            <h3>Waiting Queue</h3>
+            <span id="queueCount" style="font-weight: bold; color: var(--primary);">0 waiting</span>
+        </div>
+        <div id="queueContainer">
+            </div>
+    </div>
+</div>
+
+<script>
+    let queue = JSON.parse(localStorage.getItem('emi_form_queue_ultrahd2')) || [];
+    let sequentialIndexes = {}; 
+    
+    // Temporary storage for all 9 images
+    let pendingImages = {
+        citFront: null, citBack: null, photo1: null, photo2: null,
+        deed1: null, deed2: null, pgDeed: null, loanApp: null, vatBill: null
+    };
+
+    const form = document.getElementById('emiForm');
+    const queueContainer = document.getElementById('queueContainer');
+    const queueCount = document.getElementById('queueCount');
+
+    function autoFormatDate(e) {
+        let val = e.target.value.replace(/\D/g, '');
+        let formatted = '';
+        if (val.length > 0) formatted = val.substring(0, 4);
+        if (val.length > 4) formatted += '/' + val.substring(4, 6);
+        if (val.length > 6) formatted += '/' + val.substring(6, 8);
+        e.target.value = formatted;
+    }
+    document.getElementById('citIssuedDate').addEventListener('input', autoFormatDate);
+    document.getElementById('dob').addEventListener('input', autoFormatDate);
+
+    // --- NATIVE ANDROID IMEI DETECTOR ---
+    const scanBtn = document.getElementById('scanBtn');
+    const scannerInput = document.getElementById('scannerInput');
+    const imeiInput = document.getElementById('imei');
+    const scanFeedback = document.getElementById('scan-feedback');
+
+    scanBtn.addEventListener('click', () => { scannerInput.click(); });
+
+    scannerInput.addEventListener('change', async (e) => {
+        if (e.target.files.length === 0) return;
+        const imageFile = e.target.files[0];
+        scanFeedback.style.color = "#2563eb"; 
+        scanFeedback.innerText = "Analyzing barcodes...";
+
+        if (!('BarcodeDetector' in window)) {
+            scanFeedback.style.color = "#dc2626";
+            scanFeedback.innerText = "Hardware scanner blocked! Use Chrome browser.";
+            scannerInput.value = ""; return;
+        }
+
+        const img = new Image();
+        img.src = URL.createObjectURL(imageFile);
+        img.onload = async () => {
+            try {
+                const detector = new BarcodeDetector();
+                const barcodes = await detector.detect(img);
+
+                let foundImei = null;
+                for (const barcode of barcodes) {
+                    let cleanText = barcode.rawValue.replace(/\D/g, ''); 
+                    if (cleanText.length === 15) { foundImei = cleanText; break; }
+                }
+
+                if (foundImei) {
+                    imeiInput.value = foundImei;
+                    imeiInput.style.backgroundColor = "#dcfce7";
+                    setTimeout(() => imeiInput.style.backgroundColor = "white", 1000);
+                    scanFeedback.style.color = "#16a34a"; 
+                    scanFeedback.innerText = "✅ IMEI Found!";
+                    setTimeout(() => { scanFeedback.innerText = ""; }, 3000);
+                } else {
+                    scanFeedback.style.color = "#ea580c";
+                    scanFeedback.innerText = `❌ Found ${barcodes.length} barcodes, none 15 digits. Try again.`;
+                }
+            } catch (err) {
+                scanFeedback.style.color = "#dc2626";
+                scanFeedback.innerText = "Error analyzing image.";
+            } finally {
+                URL.revokeObjectURL(img.src);
+                scannerInput.value = "";
+            }
+        };
+    });
+    // ------------------------------------
+
+    // --- TWO-TIER COMPRESSION LOGIC ---
+    function handleImageCompression(e, key, targetMaxWidth, jpegQuality) {
+        const file = e.target.files[0];
+        if (!file) { pendingImages[key] = null; return; }
+        
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let scale = 1;
+                if (img.width > targetMaxWidth) { scale = targetMaxWidth / img.width; }
+                
+                canvas.width = img.width * scale;
+                canvas.height = img.height * scale;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                
+                pendingImages[key] = canvas.toDataURL('image/jpeg', jpegQuality);
+            };
+            img.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+    
+    // Tier 1: Ultra HD for Profiles & IDs (2500px, 95% Quality -> ~1.5 to 2.0 MB)
+    document.getElementById('citFrontImg').addEventListener('change', e => handleImageCompression(e, 'citFront', 2500, 0.95));
+    document.getElementById('citBackImg').addEventListener('change', e => handleImageCompression(e, 'citBack', 2500, 0.95));
+    document.getElementById('photo1Img').addEventListener('change', e => handleImageCompression(e, 'photo1', 2500, 0.95));
+    document.getElementById('photo2Img').addEventListener('change', e => handleImageCompression(e, 'photo2', 2500, 0.95));
+
+    // Tier 2: Document HD for Deeds & Docs (1600px, 80% Quality -> ~300KB to 600KB, easily < 1.2 MB)
+    document.getElementById('deed1Img').addEventListener('change', e => handleImageCompression(e, 'deed1', 1600, 0.80));
+    document.getElementById('deed2Img').addEventListener('change', e => handleImageCompression(e, 'deed2', 1600, 0.80));
+    document.getElementById('pgDeedImg').addEventListener('change', e => handleImageCompression(e, 'pgDeed', 1600, 0.80));
+    document.getElementById('loanAppImg').addEventListener('change', e => handleImageCompression(e, 'loanApp', 1600, 0.80));
+    document.getElementById('vatBillImg').addEventListener('change', e => handleImageCompression(e, 'vatBill', 1600, 0.80));
+    // -------------------------------
+
+    const fields = [
+        {id: 'tole', label: 'Tole'}, {id: 'wardNo', label: 'Ward No.'}, {id: 'municipality', label: 'Rural/Mun.'},
+        {id: 'district', label: 'District'}, {id: 'province', label: 'Province'}, {id: 'email', label: 'Email'},
+        {id: 'mobile1', label: 'Mobile 1'}, {id: 'maritalStatus', label: 'Marital Status'}, 
+        {id: 'grandFatherName', label: 'Grandfather'}, {id: 'motherName', label: 'Mother Name'}, 
+        {id: 'fatherName', label: 'Father Name'}, {id: 'occupation', label: 'Occupation'},
+        {id: 'citIssuedDate', label: 'Cit. Issue Date'}, {id: 'citIssuedFrom', label: 'Cit. Issue From'},
+        {id: 'citNo', label: 'Citizenship No.'}, {id: 'dob', label: 'DOB'},
+        {id: 'lastName', label: 'Last Name'}, {id: 'middleName', label: 'Middle Name'},
+        {id: 'firstName', label: 'First Name'}, {id: 'imei', label: 'IMEI Number'}
+    ];
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const customerData = { 
+            uniqueId: Date.now(),
+            photos: { ...pendingImages }
+        };
+        
+        fields.forEach(f => {
+            customerData[f.id] = document.getElementById(f.id).value;
+        });
+
+        queue.push(customerData);
+        
+        try {
+            localStorage.setItem('emi_form_queue_ultrahd2', JSON.stringify(queue));
+            renderQueue();
+            form.reset();
+            
+            // Clear pending memory
+            pendingImages = {
+                citFront: null, citBack: null, photo1: null, photo2: null,
+                deed1: null, deed2: null, pgDeed: null, loanApp: null, vatBill: null
+            };
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        } catch (error) {
+            queue.pop(); // Remove the customer that broke the memory
+            alert("⚠️ PHONE STORAGE LIMIT REACHED ⚠️\n\nBecause you are saving 9 high-quality photos per person, your offline memory is full. You MUST tap 'Finished / Remove from Queue' on the old customer to free up space, then try adding this one again.");
+        }
+    });
+
+    function saveAndRender() {
+        try {
+            localStorage.setItem('emi_form_queue_ultrahd2', JSON.stringify(queue));
+            renderQueue();
+        } catch (error) {
+            console.error("Storage limit reached on save", error);
+        }
+    }
+
+    function deleteCustomer(uniqueId) {
+        queue = queue.filter(c => c.uniqueId !== uniqueId);
+        delete sequentialIndexes[uniqueId]; 
+        saveAndRender();
+    }
+
+    // --- TEXT COPY LOGIC ---
+    function forceCopy(text, btnElement, successMessage, callback) {
+        if (!text) return;
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position = "fixed"; textArea.style.opacity = "0";
+        document.body.appendChild(textArea);
+        textArea.focus(); textArea.select();
+
+        try {
+            if (document.execCommand('copy')) {
+                btnElement.innerText = successMessage;
+                btnElement.classList.add('copied');
+                if (callback) setTimeout(callback, 700);
+            }
+        } catch (err) {}
+        document.body.removeChild(textArea);
+    }
+
+    function copyText(text, btnElement) {
+        const originalText = btnElement.innerText;
+        forceCopy(text, btnElement, "Copied! ✓", () => {
+            btnElement.innerText = originalText;
+            btnElement.classList.remove('copied');
+        });
+    }
+
+    function copySequence(uniqueId, btnElement) {
+        const customer = queue.find(c => c.uniqueId === uniqueId);
+        if (!customer) return;
+        const availableFields = fields.filter(f => customer[f.id] && customer[f.id].trim() !== "");
+
+        if (availableFields.length === 0) {
+            btnElement.innerText = "Nothing to copy!";
+            setTimeout(() => { btnElement.innerText = "⏭️ Start: Copy Nothing"; }, 1000);
+            return;
+        }
+
+        if (sequentialIndexes[uniqueId] === undefined) sequentialIndexes[uniqueId] = 0;
+        let currentIndex = sequentialIndexes[uniqueId];
+
+        if (currentIndex >= availableFields.length) {
+            btnElement.innerText = "Resetting...";
+            sequentialIndexes[uniqueId] = 0;
+            setTimeout(() => {
+                btnElement.innerText = `⏭️ Start: Copy ${availableFields[0].label}`;
+                btnElement.classList.remove('copied');
+            }, 500);
+            return;
+        }
+
+        const currentField = availableFields[currentIndex];
+        forceCopy(customer[currentField.id], btnElement, `Copied: ${customer[currentField.id]} ✓`, () => {
+            sequentialIndexes[uniqueId]++;
+            btnElement.classList.remove('copied');
+            if (sequentialIndexes[uniqueId] < availableFields.length) {
+                btnElement.innerText = `⏭️ Next: Copy ${availableFields[sequentialIndexes[uniqueId]].label}`;
+            } else {
+                btnElement.innerText = `✅ All Text Copied!`;
+            }
+        });
+    }
+    
+    // --- IMAGE SAVING / COPYING LOGIC ---
+    function downloadImage(base64Data, filename, btnElement) {
+        const a = document.createElement('a');
+        a.href = base64Data;
+        a.download = filename + '.jpg';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        
+        btnElement.innerText = "Saved! ✓";
+        btnElement.style.background = "#16a34a";
+        setTimeout(() => {
+            btnElement.innerText = "💾 Save";
+            btnElement.style.background = "";
+        }, 2000);
+    }
+    
+    async function copyImageToClipboard(base64Data, btnElement) {
+        try {
+            const img = new Image();
+            img.src = base64Data;
+            await new Promise(r => img.onload = r);
+            
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width; canvas.height = img.height;
+            canvas.getContext('2d').drawImage(img, 0, 0);
+            
+            canvas.toBlob(async (blob) => {
+                try {
+                    await navigator.clipboard.write([
+                        new ClipboardItem({ 'image/png': blob })
+                    ]);
+                    btnElement.innerText = "Copied! ✓";
+                    btnElement.style.background = "#16a34a";
+                    btnElement.style.color = "white";
+                    setTimeout(() => {
+                        btnElement.innerText = "📋 Copy";
+                        btnElement.style.background = "";
+                        btnElement.style.color = "";
+                    }, 2000);
+                } catch(err) {
+                    alert("Browser blocked copying image. Use 'Save' button instead!");
+                }
+            }, 'image/png');
+        } catch(err) {
+            console.error(err);
+        }
+    }
+
+    function renderQueue() {
+        queueCount.innerText = `${queue.length} waiting`;
+        if (queue.length === 0) {
+            queueContainer.innerHTML = `<div class="card empty-state">No customers in queue.</div>`;
+            return;
+        }
+
+        queueContainer.innerHTML = '';
+        queue.forEach((c, index) => {
+            const card = document.createElement('div');
+            card.className = 'customer-card';
+            
+            const availableFields = fields.filter(f => c[f.id] && c[f.id].trim() !== "");
+            let firstFieldLabel = availableFields.length > 0 ? availableFields[0].label : "Nothing";
+
+            let buttonsHtml = '';
+            fields.forEach(f => {
+                if (c[f.id]) {
+                    buttonsHtml += `
+                    <div class="copy-group">
+                        <span class="copy-label">${f.label}</span>
+                        <button class="copy-btn" onclick="copyText('${c[f.id].replace(/'/g, "\\'")}', this)">${c[f.id]}</button>
+                    </div>`;
+                }
+            });
+            
+            // Build Photo Section (Now includes all 9 images)
+            let photosHtml = '';
+            if (c.photos) {
+                let nameStr = (c.firstName || 'Cust').replace(/[^a-zA-Z0-9]/g, '');
+                
+                const photoDetails = [
+                    { key: 'citFront', label: 'Cit Front' },
+                    { key: 'citBack', label: 'Cit Back' },
+                    { key: 'photo1', label: 'Photo 1' },
+                    { key: 'photo2', label: 'Photo 2' },
+                    { key: 'deed1', label: 'Deed 1' },
+                    { key: 'deed2', label: 'Deed 2' },
+                    { key: 'pgDeed', label: 'PG-Deed' },
+                    { key: 'loanApp', label: 'Loan App' },
+                    { key: 'vatBill', label: 'VAT Bill' }
+                ];
+                
+                let activePhotos = photoDetails.filter(p => c.photos[p.key]);
+                
+                if (activePhotos.length > 0) {
+                    photosHtml = `<div class="photo-grid">`;
+                    activePhotos.forEach(p => {
+                        photosHtml += `
+                        <div class="photo-box">
+                            <span class="copy-label">${p.label}</span>
+                            <img src="${c.photos[p.key]}">
+                            <div class="photo-actions">
+                                <button class="img-btn save-img-btn" onclick="downloadImage('${c.photos[p.key]}', '${nameStr}_${p.label}', this)">💾 Save</button>
+                                <button class="img-btn copy-img-btn" onclick="copyImageToClipboard('${c.photos[p.key]}', this)">📋 Copy</button>
+                            </div>
+                        </div>`;
+                    });
+                    photosHtml += `</div>`;
+                }
+            }
+
+            let displayName = (c.firstName || '') + ' ' + (c.lastName || '');
+            if (!displayName.trim()) displayName = "Customer";
+            
+            card.innerHTML = `
+                <div class="customer-title">#${index + 1} - ${displayName}</div>
+                <button class="copy-sequence-btn" onclick="copySequence(${c.uniqueId}, this)">
+                    ⏭️ Start: Copy ${firstFieldLabel}
+                </button>
+                <div class="action-grid">${buttonsHtml}</div>
+                ${photosHtml}
+                <button class="delete-btn" onclick="deleteCustomer(${c.uniqueId})">Finished / Remove from Queue</button>
+            `;
+            queueContainer.appendChild(card);
+        });
+    }
+
+    renderQueue();
+</script>
+
+</body>
+</html>
